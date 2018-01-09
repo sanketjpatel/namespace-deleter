@@ -17,7 +17,7 @@ well.
 `NAMESPACE` defines which namespace to delete.
 
 `READ_RESULTS_DIR` tells the application to read this directory for a file named
-`/done`. This file is used as the signal used to indicate the namespace is ready
+`done`. This file is used as the signal used to indicate the namespace is ready
 for deletion.
 
 ## Example
