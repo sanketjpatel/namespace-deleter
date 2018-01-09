@@ -17,7 +17,8 @@ well.
 `NAMESPACE` defines which namespace to delete.
 
 `READ_RESULTS_DIR` tells the application to read this directory for a file named
-`/done`. This file is used as the signal used to indicate the namespace is ready for deletion.
+`/done`. This file is used as the signal used to indicate the namespace is ready
+for deletion.
 
 ## Example
 
@@ -40,4 +41,9 @@ spec:
   serviceAccountName: example-serviceaccount
 ```
 
-This pod will delete the namespace `example` when it sees a file named `done` in `/tmp/results`.
+This pod will delete the namespace `example` when it sees a file named `done` in
+`/tmp/results`.
+
+[k8s]: https://kubernetes.io/
+[scanner]: https://scanner.heptio.com/
+[sonobuoy]: https://github.com/heptio/sonobuoy/
