@@ -10,3 +10,4 @@ RUN CGO_ENABLED=0 GOOS=linux go install -ldflags="-w -s" -v github.com/heptiolab
 
 FROM alpine:latest
 COPY --from=0 /go/bin/namespace-deleter /bin/namespace-deleter
+CMD ["/bin/namespace-deleter"]

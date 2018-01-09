@@ -4,5 +4,5 @@ IMAGE = gcr.io/heptio-images/$(TARGET)
 GOTARGET = github.com/heptio/$(TARGET)
 DOCKER ?= docker
 
-image: cbuild
+image:
 	$(DOCKER) build -t $(IMAGE):$(VERSION) .
