@@ -14,7 +14,8 @@ namespace after the [Sonobuoy][sonobuoy] run is complete.
 This application only needs one environment variable to work and two to work
 well.
 
-`NAMESPACE` defines which namespace to delete.
+`NAMESPACES` defines which namespaces to delete. Namespaces should be a comma
+delimited string: `"example-ns-1,example-ns-2"`
 
 `READ_RESULTS_DIR` tells the application to read this directory for a file named
 `done`. This file is used as the signal used to indicate the namespace is ready
@@ -31,10 +32,8 @@ metadata:
 spec:
   containers:
   - env:
-    - name: NAMESPACE
-      valueFrom:
-        fieldRef:
-          fieldPath: metadata.namespace
+    - name: NAMESPACES
+      value: "example-ns-1,example-ns-2"
     image: gcr.io/heptio-images/namespace-deleter:v0.0.2
     imagePullPolicy: Always
     name: deleter
