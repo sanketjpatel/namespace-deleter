@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 
 	"k8s.io/client-go/kubernetes"
@@ -39,10 +40,12 @@ func waitForFile(waitfile string) []byte {
 }
 
 func main() {
-	namespace := os.Getenv("NAMESPACE")
-	if namespace == "" {
-		panic("NAMESPACE env is required")
+	namespaces := os.Getenv("NAMESPACES")
+	if namespaces == "" {
+		panic("You must specify the NAMESPACES env variable.")
 	}
+
+	namespaceList := strings.Split(namespaces, ",")
 
 	resultsDir := os.Getenv("READ_RESULTS_DIR")
 	if resultsDir == "" {
@@ -62,9 +65,10 @@ func main() {
 	nsClient := clientset.CoreV1().Namespaces()
 	// Wait for the previous container to finish running
 	waitForFile(resultsDir + "/done")
-	// We know the namespace exists because we're running on it
-	err = nsClient.Delete(namespace, nil)
-	if err != nil {
-		fmt.Println("Error:", err)
+	for _, namespace := range namespaceList {
+		err = nsClient.Delete(namespace, nil)
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
 	}
 }
