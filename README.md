@@ -28,7 +28,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: deleter
-  namespace: example
+  namespace: example-ns-1,example-ns-2
 spec:
   containers:
   - env:
@@ -40,7 +40,7 @@ spec:
   serviceAccountName: example-serviceaccount
 ```
 
-This pod will delete the namespace `example` when it sees a file named `done` in
+This pod will delete the namespaces `example-ns-1` and `example-ns-2` when it sees a file named `done` in
 `/tmp/results`.
 
 [k8s]: https://kubernetes.io/
