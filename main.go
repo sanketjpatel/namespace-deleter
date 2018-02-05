@@ -17,12 +17,12 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 )
@@ -34,6 +34,7 @@ func waitForFile(waitfile string) []byte {
 		if err != nil {
 			time.Sleep(1 * time.Second)
 		} else {
+			log.WithField("File", waitfile).Info("Finished reading the contents")
 			return contents
 		}
 	}
@@ -42,7 +43,8 @@ func waitForFile(waitfile string) []byte {
 func main() {
 	namespaces := os.Getenv("NAMESPACES")
 	if namespaces == "" {
-		panic("You must specify the NAMESPACES env variable.")
+		log.Info("No namespaces provided, please set the NAMESPACES environment variable")
+		os.Exit(1)
 	}
 
 	namespaceList := strings.Split(namespaces, ",")
@@ -51,15 +53,18 @@ func main() {
 	if resultsDir == "" {
 		resultsDir = "/tmp/results"
 	}
+	log.WithField("resultsDir", resultsDir).Info("Waiting for results to appear in this directory")
 
 	config, err := rest.InClusterConfig()
 	if err != nil {
-		panic(err)
+		log.WithError(err).Info("Unable to load in-cluster configuration")
+		os.Exit(1)
 	}
 
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
-		panic(err)
+		log.WithError(err).Info("Unable to create a new ClientSet for the given config")
+		os.Exit(1)
 	}
 
 	nsClient := clientset.CoreV1().Namespaces()
@@ -68,7 +73,7 @@ func main() {
 	for _, namespace := range namespaceList {
 		err = nsClient.Delete(namespace, nil)
 		if err != nil {
-			fmt.Println("Error:", err)
+			log.WithField("namespace", namespace).WithError(err).Info("Could not delete namespace")
 		}
 	}
 }
